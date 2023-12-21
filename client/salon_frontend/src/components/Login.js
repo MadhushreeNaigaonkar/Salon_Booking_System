@@ -1,15 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Login() {
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
+  const [message, setMessage] = useState("");
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setMessage("HEllo");
+
+    try {
+      const response = fetch("http://localhost:9000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = response.json();
+
+      if (response.ok) {
+        setMessage(data.message);
+      } else {
+        setMessage("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Error submitting login form:", error);
+      setMessage("Login failed. Please try again.");
+    }
+  };
+
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
               <h3 className="card-title text-center">Login</h3>
-              {/* <form onSubmit={handleSubmit}> */}
-              <form>
+
+              <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     Email address
@@ -19,8 +54,8 @@ function Login() {
                     className="form-control"
                     id="email"
                     name="email"
-                    // value={formData.email}
-                    // onChange={handleChange}
+                    value={credentials.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -33,8 +68,8 @@ function Login() {
                     className="form-control"
                     id="password"
                     name="password"
-                    // value={formData.password}
-                    // onChange={handleChange}
+                    value={credentials.password}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -44,6 +79,7 @@ function Login() {
                   </button>
                 </div>
               </form>
+              {message && <p className="mt-3">{message}</p>}
             </div>
           </div>
         </div>
