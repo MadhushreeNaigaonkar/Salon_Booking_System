@@ -1,64 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Landing from "./Landing";
+import "./Crousals.css"; // Import the CSS file
+import Slide1 from "../assests/Slide1.jpg";
+import Slide2 from "../assests/Slide2.jpg";
+import Slide3 from "../assests/Slide3.jpg";
 
 function Crousal() {
+  const images = [Slide1, Slide2, Slide3];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [currentIndex, images.length]);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
   return (
     <>
-      <div>
-        <div
-          id="carouselExampleControls"
-          className="carousel slide"
-          data-ride="carousel"
-        >
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img
-                className="d-block w-100"
-                src={require("../assests/facial.jpeg")}
-                alt="First slide"
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src={require("../assests/massage.jpeg")}
-                alt="Second slide"
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src={require("../assests/manicure.jpeg")}
-                alt="Third slide"
-              />
-            </div>
-          </div>
-          <a
-            className="carousel-control-prev"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-          </a>
-          <a
-            className="carousel-control-next"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="sr-only">Next</span>
-          </a>
+      <div className="carousel-container">
+        <div className="carousel-arrow" onClick={prevSlide}>
+          &#8249;
+        </div>
+        <img
+          src={images[currentIndex]}
+          alt={`Slide ${currentIndex + 1}`}
+          className="carousel-image"
+        />
+        <div className="carousel-arrow" onClick={nextSlide}>
+          &#8250;
         </div>
       </div>
     </>
   );
 }
+
 export default Crousal;

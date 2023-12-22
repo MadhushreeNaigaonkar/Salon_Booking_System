@@ -1,0 +1,25 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 600px; /* Set your desired height */
+  text-align: center;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the entire container */
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  cursor: pointer;
+  color: white; /* Set the color of the arrow */
+}
+
+.carousel-arrow:hover {
+  color: gray; /* Set the color when hovering over the arrow */
+}
