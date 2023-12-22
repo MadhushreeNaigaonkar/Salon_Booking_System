@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = fetch("http://localhost:9000/login", {
+      const response = await fetch("http://localhost:9000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

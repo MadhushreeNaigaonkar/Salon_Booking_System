@@ -8,6 +8,7 @@ export default function Register() {
     address: { value: "", valid: "false", touched: false, error: "" },
     email: { value: "", valid: "false", touched: false, error: "" },
     password: { value: "", valid: "false", touched: false, error: "" },
+    phone: { value: "", valid: "false", touched: false, error: "" },
     formValid: false,
     message: "",
   };
@@ -62,6 +63,13 @@ export default function Register() {
           valid = false;
           error =
             "password should be more tha 8 characters less than 15 characters should contain Capital letters,small letters and special symbols";
+        }
+        break;
+      case "phone":
+        var pattern = /^\d{10}$/;
+        if (!pattern.test(val)) {
+          valid = false;
+          error = "enter 10 digit valid phone no";
         }
         break;
     }
@@ -151,6 +159,21 @@ export default function Register() {
                     )}
                   </div>
                   <div className="mb-3">
+                    <label htmlFor="phone" className="form-label">
+                      Phone Number
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="phone"
+                      name="phone"
+                      value={user.phone.value}
+                      onChange={(e) => handleChange("phone", e.target.value)}
+                      onBlur={(e) => handleChange("phone", e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
                     <label htmlFor="address" className="form-label">
                       Address
                     </label>
@@ -159,6 +182,7 @@ export default function Register() {
                       className="form-control"
                       id="address"
                       name="address"
+                      value={user.address.value}
                       onChange={(e) => handleChange("address", e.target.value)}
                       onBlur={(e) => handleChange("address", e.target.value)}
                       required
