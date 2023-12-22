@@ -9,7 +9,7 @@ export default function Register() {
     email: { value: "", valid: "false", touched: false, error: "" },
     password: { value: "", valid: "false", touched: false, error: "" },
     formValid: false,
-    message: "",
+    message: ""
   };
 
   const reducer = (state, action) => {
@@ -85,7 +85,7 @@ export default function Register() {
   const submitData = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", {
+      const response = await axios.post("http://localhost:9000/register", {
         name: user.name.value,
         address: user.address.value,
         email: user.email.value,
@@ -134,7 +134,6 @@ export default function Register() {
                           ? "is-invalid"
                           : ""
                       }`}
-                      id="name"
                       id="name"
                       name="name"
                       value={user.name.value}
