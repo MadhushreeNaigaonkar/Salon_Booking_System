@@ -31,6 +31,7 @@ export default function Register() {
 
       if (response.status === 200) {
         setMessage(data.message); // Set success message
+        showAlert();
       } else {
         setMessage(data.error); // Set error message
       }
@@ -39,6 +40,9 @@ export default function Register() {
       setMessage('Registration failed. Please try again.');
     }
   };
+  const showAlert = () => {
+  window.alert("Registration successful!");
+};
 
   return (
     <div className="container mt-5">
