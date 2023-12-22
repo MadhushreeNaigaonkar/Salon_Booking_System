@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom"; 
 
 export default function Register() {
+  const history = useHistory();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -32,6 +35,7 @@ export default function Register() {
       if (response.status === 200) {
         setMessage(data.message); // Set success message
         showAlert();
+        history.push("/login");
       } else {
         setMessage(data.error); // Set error message
       }
