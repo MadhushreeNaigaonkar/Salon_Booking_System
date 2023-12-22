@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdatePass() {
-   const history = useHistory();
+   const history = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     prev_password: "",
@@ -32,7 +32,7 @@ export default function UpdatePass() {
       if (response.status === 200) {
         setMessage(data.message);
         console.log('Password update successful. Server response:', data);
-        history.push("/login");
+        history("/login");
       } else {
         console.error('Password update failed. Server response:', data);
         setMessage('Password update failed. Please try again.');
