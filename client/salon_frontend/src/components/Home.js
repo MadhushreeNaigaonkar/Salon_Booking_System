@@ -1,13 +1,12 @@
 import React from "react";
-import Landing from "./Landing";
+import NavLogout from "./NavLogout";
 
 const Home = () => {
   return (
     <>
-      <Landing />
+      <NavLogout />
       <div className="container mt-4">
         <h1 className="mb-4">Services Provided</h1>
-        {/* <button className="btn btn-primary">Logout</button> */}
         <div className="row">
           <div className="col-md-4 mb-3">
             <div className="text-center">

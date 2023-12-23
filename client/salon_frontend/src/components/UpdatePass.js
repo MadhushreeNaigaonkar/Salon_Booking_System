@@ -33,6 +33,7 @@ export default function UpdatePass() {
       if (response.status === 200) {
         setMessage(data.message);
         console.log("Password update successful. Server response:", data);
+        showAlert();
         history("/login");
       } else {
         console.error("Password update failed. Server response:", data);
@@ -42,6 +43,10 @@ export default function UpdatePass() {
       console.error("Error updating password:", error);
       setMessage("Password update failed. Please try again.");
     }
+  };
+
+  const showAlert = () => {
+    window.alert("Update success");
   };
 
   return (

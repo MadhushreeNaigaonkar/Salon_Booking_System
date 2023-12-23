@@ -1,8 +1,9 @@
 import React, { useReducer } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Landing from "./Landing";
 
 export default function Register() {
+  const history = useNavigate();
   const init = {
     name: { value: "", valid: "false", touched: false, error: "" },
     address: { value: "", valid: "false", touched: false, error: "" },
@@ -21,9 +22,10 @@ export default function Register() {
 
       case "reset":
         return init;
-
       case "setMessage":
         return { ...state, message: action.message };
+      default:
+        return state;
     }
   };
 
@@ -34,10 +36,17 @@ export default function Register() {
     let error = "";
     switch (key) {
       case "name":
-        var pattern = /^[A-Za-z]+$/;
+        var pattern = /^[A-Za-z ]+$/;
         if (!pattern.test(val)) {
           valid = false;
-          error = "Name should contain alphabets only";
+          error = "Name should contain alphabet";
+        }
+        break;
+      case "phone":
+        var pattern = /^\d{10}$/;
+        if (!pattern.test(val)) {
+          valid = false;
+          error = "enter 10 digit valid phone no";
         }
         break;
 
@@ -65,15 +74,11 @@ export default function Register() {
             "password should be more tha 8 characters less than 15 characters should contain Capital letters,small letters and special symbols";
         }
         break;
-      case "phone":
-        var pattern = /^\d{10}$/;
-        if (!pattern.test(val)) {
-          valid = false;
-          error = "enter 10 digit valid phone no";
-        }
+
+      default:
         break;
     }
-    return { valid: valid, error: error };
+    return { valid, error };
   };
 
   const handleChange = (key, value) => {
@@ -87,21 +92,35 @@ export default function Register() {
     }
     dispatch({
       type: "update",
-      data: { key, value, touched: true, valid, error, formValid },
+      data: {
+        key,
+        value,
+        touched: true,
+        valid,
+        error,
+        formValid,
+      },
     });
   };
   const submitData = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", {
-        name: user.name.value,
-        address: user.address.value,
-        email: user.email.value,
-        password: user.password.value,
+      const response = await fetch("http://localhost:9000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user.name.value,
+          phone: user.phone.value,
+          address: user.address.value,
+          email: user.email.value,
+          password: user.password.value,
+        }),
       });
       if (response.status === 200) {
         dispatch({ type: "setMessage", message: "Registration successful!" });
-
+        history("/login");
         showAlert();
       } else {
         dispatch({
@@ -137,11 +156,7 @@ export default function Register() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${
-                        user.name.touched && !user.name.valid
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className="form-control"
                       id="name"
                       id="name"
                       name="name"
@@ -154,10 +169,19 @@ export default function Register() {
                       }}
                       required
                     />
-                    {user.name.touched && !user.name.valid && (
-                      <div className="invalid-feedback">{user.name.error}</div>
-                    )}
+                    <br />
+                    <div
+                      style={{
+                        display:
+                          user.name.touched && !user.name.valid
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      {user.name.error}
+                    </div>
                   </div>
+
                   <div className="mb-3">
                     <label htmlFor="phone" className="form-label">
                       Phone Number
@@ -168,11 +192,27 @@ export default function Register() {
                       id="phone"
                       name="phone"
                       value={user.phone.value}
-                      onChange={(e) => handleChange("phone", e.target.value)}
-                      onBlur={(e) => handleChange("phone", e.target.value)}
+                      onChange={(e) => {
+                        handleChange("phone", e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        handleChange("phone", e.target.value);
+                      }}
                       required
                     />
+                    <br />
+                    <div
+                      style={{
+                        display:
+                          user.phone.touched && !user.phone.valid
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      {user.phone.error}
+                    </div>
                   </div>
+
                   <div className="mb-3">
                     <label htmlFor="address" className="form-label">
                       Address
@@ -183,16 +223,27 @@ export default function Register() {
                       id="address"
                       name="address"
                       value={user.address.value}
-                      onChange={(e) => handleChange("address", e.target.value)}
-                      onBlur={(e) => handleChange("address", e.target.value)}
+                      onChange={(e) => {
+                        handleChange("address", e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        handleChange("address", e.target.value);
+                      }}
                       required
                     />
-                    {user.address.touched && !user.address.valid && (
-                      <div className="invalid-feedback">
-                        {user.address.error}
-                      </div>
-                    )}
+                    <br />
+                    <div
+                      style={{
+                        display:
+                          user.address.touched && !user.address.valid
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      {user.address.error}
+                    </div>
                   </div>
+
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label">
                       Email address
@@ -203,16 +254,29 @@ export default function Register() {
                       id="email"
                       name="email"
                       value={user.email.value}
-                      onChange={(e) => handleChange("email", e.target.value)}
-                      onBlur={(e) => handleChange("email", e.target.value)}
+                      onChange={(e) => {
+                        handleChange("email", e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        handleChange("email", e.target.value);
+                      }}
                       required
                     />
-                    {user.email.touched && !user.email.valid && (
-                      <div className="invalid-feedback">{user.email.error}</div>
-                    )}
+                    <br />
+                    <div
+                      style={{
+                        display:
+                          user.email.touched && !user.email.valid
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      {user.email.error}
+                    </div>
                   </div>
+
                   <div className="mb-3">
-                    <label htmlFor="" className="form-label">
+                    <label htmlFor="password" className="form-label">
                       Password
                     </label>
                     <input
@@ -221,20 +285,37 @@ export default function Register() {
                       id="password"
                       name="password"
                       value={user.password.value}
-                      onChange={(e) => handleChange("password", e.target.value)}
-                      onBlur={(e) => handleChange("password", e.target.value)}
+                      onChange={(e) => {
+                        handleChange("password", e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        handleChange("password", e.target.value);
+                      }}
                       required
                     />
-                    {user.password.touched && !user.password.valid && (
-                      <div className="invalid-feedback">
-                        {user.password.error}
-                      </div>
-                    )}
+                    <br />
+                    <div
+                      style={{
+                        display:
+                          user.password.touched && !user.password.valid
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      {user.password.error}
+                    </div>
                   </div>
+
                   <div className="text-center">
-                    <button type="submit" className="btn btn-primary">
-                      Register
-                    </button>
+                    <input
+                      type="submit"
+                      value="Register"
+                      className="btn btn-primary"
+                      disabled={!user.formValid}
+                      onClick={(e) => {
+                        submitData(e);
+                      }}
+                    />
                   </div>
                 </form>
                 {user.message && (
