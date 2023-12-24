@@ -158,7 +158,6 @@ export default function Register() {
                       type="text"
                       className="form-control"
                       id="name"
-                      id="name"
                       name="name"
                       value={user.name.value}
                       onChange={(e) => {
