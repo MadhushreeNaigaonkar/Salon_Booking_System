@@ -1,15 +1,17 @@
 import React, { useReducer } from "react";
 import axios from "axios";
 import Landing from "./Landing";
-
+import { useNavigate } from "react-router-dom";
 export default function Register() {
+  const history = useNavigate();
   const init = {
     name: { value: "", valid: "false", touched: false, error: "" },
+    phone: { value: "", valid: "false", touched: false, error: "" },
     address: { value: "", valid: "false", touched: false, error: "" },
     email: { value: "", valid: "false", touched: false, error: "" },
     password: { value: "", valid: "false", touched: false, error: "" },
     formValid: false,
-    message: ""
+    message: "",
   };
 
   const reducer = (state, action) => {
@@ -57,11 +59,18 @@ export default function Register() {
         break;
       case "password":
         var pattern =
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+          /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/;
         if (!pattern.test(val)) {
           valid = false;
           error =
             "password should be more tha 8 characters less than 15 characters should contain Capital letters,small letters and special symbols";
+        }
+        break;
+      case "phone":
+        var pattern = /^\d{10}$/;
+        if (!pattern.test(val)) {
+          valid = false;
+          error = "enter 10 digit valid phone no";
         }
         break;
     }
@@ -87,13 +96,14 @@ export default function Register() {
     try {
       const response = await axios.post("http://localhost:9000/register", {
         name: user.name.value,
+        phone:user.phone.value,
         address: user.address.value,
         email: user.email.value,
         password: user.password.value,
       });
       if (response.status === 200) {
         dispatch({ type: "setMessage", message: "Registration successful!" });
-
+        history("/login");
         showAlert();
       } else {
         dispatch({
@@ -150,6 +160,21 @@ export default function Register() {
                     )}
                   </div>
                   <div className="mb-3">
+                    <label htmlFor="phone" className="form-label">
+                      Phone Number
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="phone"
+                      name="phone"
+                      value={user.phone.value}
+                      onChange={(e) => handleChange("phone", e.target.value)}
+                      onBlur={(e) => handleChange("phone", e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
                     <label htmlFor="address" className="form-label">
                       Address
                     </label>
@@ -158,6 +183,7 @@ export default function Register() {
                       className="form-control"
                       id="address"
                       name="address"
+                      value={user.address.value}
                       onChange={(e) => handleChange("address", e.target.value)}
                       onBlur={(e) => handleChange("address", e.target.value)}
                       required
